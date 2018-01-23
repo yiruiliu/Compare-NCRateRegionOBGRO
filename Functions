@@ -8,7 +8,6 @@ local B,C,CC;
 	return CC;
 end;
 
-####subfunction that removes a "list" of rows in matrix "A"
 Myremove:=function(A,list)
 local B,i;
 Sort(list);
@@ -22,7 +21,6 @@ fi;
 return B;
 end;
 
-#############subfunction that removes a "list" of columns in matrix "A"
 Myremovetrans:=function(A,list)
 local B;
 B:=TransposedMat(A);
@@ -31,10 +29,6 @@ B:=TransposedMat(B);
 return B;
 end;
 
-##############subfunction that: 
-##############1. removes edge capacity constaints(ROWS of matrix [A|b]) H(listofedges[i])<=R(listofedges[i]) 
-##############2. permutes edge capacity variables R(listofedges[i]) with edge entropy variable H(listofedges[i]) (COLUMNS of matrix [A|b])
-##############2. removes edge capacity variables (COLUMNS of matrix A after step 2) R(listofedges[i])
 getridandtrans:=function(ncinstance,A,b,linrows,listofedges)
 local j,rrlist,conineq,Aprime,bprime,L,Lprime,linrowsprime,i,k,c1,c2;
 Aprime:=ShallowCopy(A);
@@ -141,8 +135,6 @@ NCShannonBoundedNosumto1:=function ( ncinstance )
     return [ ShOB[1], ShOB[2], linrows ];
 end;
 
-#######function that computes the outer bound of a sink-source merged network containing N1+N2 variables,
-#######where N1 and N2 denotes the number of variables in network net1_sink and that in network net2_source, respectively.
 NCRateRegionOBGRO:=function ( ncinstance, usesym, optargs,listofedges)
     local  rlist, A, b,A1,b1, linrows, G, rlist1, ineq, ineqorb, row, rrA, rrb, 
     onemap, nslist, idx, nsrec, los, lolos, Oi, O, trans_ineq,i,j,c,list,dif,Ab,conineq;
