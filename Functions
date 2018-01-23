@@ -84,6 +84,63 @@ for i in listofedges do
 od;
 return Aprime;
 end;
+
+NCShannonBoundedNosumto1:=function ( ncinstance )
+    local  ShOB, i, linrows, con, conlin, j, conineq;
+    ShOB := GenShannonUnBounded( ncinstance[3] );
+    i := Size( ShOB[1] ) + 1;
+    linrows := [  ];
+    for con  in ncinstance[1]  do
+        conlin := ZeroMutable( [ 1 .. 2 ^ ncinstance[3] - 1 ] );
+        conlin[set2int( con[1] )] := 1;
+        conlin[set2int( con[2] )] := -1;
+        Append( ShOB[1], [ conlin ] );
+        Append( ShOB[2], [ 0 ] );
+        Append( linrows, [ i ] );
+        i := i + 1;
+    od;
+    conlin := ZeroMutable( [ 1 .. 2 ^ ncinstance[3] - 1 ] );
+    for j  in [ 1 .. ncinstance[2] ]  do
+        conlin[set2int( [ j ] )] := 1;
+    od;
+    conlin[set2int( [ 1 .. ncinstance[2] ] )] := -1;
+    Append( ShOB[1], [ conlin ] );
+    Append( ShOB[2], [ 0 ] );
+    Append( linrows, [ i ] );
+    i := i + 1;
+    for j  in [ 1 .. Size( ShOB[1] ) ]  do
+        ShOB[1][j] := Concatenation( ZeroMutable( [ 1 .. ncinstance[3] ] ), 
+           ShOB[1][j] );
+    od;
+    for j  in [ 1 .. ncinstance[2] ]  do
+        conineq 
+         := ZeroMutable( [ 1 .. 2 ^ ncinstance[3] - 1 + ncinstance[3] ] );
+        conineq[j] := 1;
+        conineq[ncinstance[3] + set2int( [ j ] )] := -1;
+        Append( ShOB[1], [ conineq ] );
+        Append( ShOB[2], [ 0 ] );
+        conineq 
+         := ZeroMutable( [ 1 .. 2 ^ ncinstance[3] - 1 + ncinstance[3] ] );
+        conineq[j] := -1;
+        Append( ShOB[1], [ conineq ] );
+        Append( ShOB[2], [ 0 ] );
+    od;
+    for j  in [ ncinstance[2] + 1 .. ncinstance[3] ]  do
+        conineq 
+         := ZeroMutable( [ 1 .. 2 ^ ncinstance[3] - 1 + ncinstance[3] ] );
+        conineq[j] := -1;
+        conineq[ncinstance[3] + set2int( [ j ] )] := 1;
+        Append( ShOB[1], [ conineq ] );
+        Append( ShOB[2], [ 0 ] );
+        conineq 
+         := ZeroMutable( [ 1 .. 2 ^ ncinstance[3] - 1 + ncinstance[3] ] );
+        conineq[j] := -1;
+        Append( ShOB[1], [ conineq ] );
+        Append( ShOB[2], [ 0 ] );
+    od;
+    return [ ShOB[1], ShOB[2], linrows ];
+end;
+
 #######function that computes the outer bound of a sink-source merged network containing N1+N2 variables,
 #######where N1 and N2 denotes the number of variables in network net1_sink and that in network net2_source, respectively.
 NCRateRegionOBGRO:=function ( ncinstance, usesym, optargs,listofedges)
